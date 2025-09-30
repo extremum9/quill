@@ -48,7 +48,7 @@ describe('ArticlePreviewComponent', () => {
     fixture.componentInstance.article = mockArticle;
     fixture.detectChanges();
 
-    const button = fixture.debugElement.query(By.css('[data-test=toggle-favorite-button]'));
+    const button = fixture.debugElement.query(By.css('[data-test=toggle-favorite-article-button]'));
     expect(button)
       .withContext('You should have a button to toggle the favoriting of the article')
       .not.toBeNull();
@@ -112,7 +112,7 @@ describe('ArticlePreviewComponent', () => {
 
     spyOn(component.toggledFavorite, 'emit');
 
-    const button = fixture.debugElement.query(By.css('[data-test=toggle-favorite-button]'));
+    const button = fixture.debugElement.query(By.css('[data-test=toggle-favorite-article-button]'));
     button.triggerEventHandler('click');
 
     expect(component.toggledFavorite.emit).toHaveBeenCalled();

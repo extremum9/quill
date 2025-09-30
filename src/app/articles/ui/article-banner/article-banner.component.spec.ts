@@ -74,7 +74,9 @@ describe('ArticleBannerComponent', () => {
     fixture.componentInstance.article = mockArticle;
     fixture.detectChanges();
 
-    const toggleFollowButton = debugElement.query(By.css('[data-test=toggle-follow-button]'));
+    const toggleFollowButton = debugElement.query(
+      By.css('[data-test=toggle-follow-author-button]')
+    );
     expect(toggleFollowButton)
       .withContext('You should have a button to toggle the following of the author')
       .not.toBeNull();
@@ -84,7 +86,9 @@ describe('ArticleBannerComponent', () => {
       .withContext('The button should have a text')
       .toContain(`Follow ${mockArticle.author.username}`);
 
-    const toggleFavoriteButton = debugElement.query(By.css('[data-test=toggle-favorite-button]'));
+    const toggleFavoriteButton = debugElement.query(
+      By.css('[data-test=toggle-favorite-article-button]')
+    );
     expect(toggleFavoriteButton)
       .withContext('You should have a button to toggle the favoriting of the article')
       .not.toBeNull();
@@ -137,7 +141,7 @@ describe('ArticleBannerComponent', () => {
 
     spyOn(component.toggledFollow, 'emit');
 
-    const button = fixture.debugElement.query(By.css('[data-test=toggle-follow-button]'));
+    const button = fixture.debugElement.query(By.css('[data-test=toggle-follow-author-button]'));
     button.triggerEventHandler('click');
 
     expect(component.toggledFollow.emit).toHaveBeenCalled();
@@ -151,7 +155,7 @@ describe('ArticleBannerComponent', () => {
 
     spyOn(component.toggledFavorite, 'emit');
 
-    const button = fixture.debugElement.query(By.css('[data-test=toggle-favorite-button]'));
+    const button = fixture.debugElement.query(By.css('[data-test=toggle-favorite-article-button]'));
     button.triggerEventHandler('click');
 
     expect(component.toggledFavorite.emit).toHaveBeenCalled();

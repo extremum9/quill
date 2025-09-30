@@ -35,7 +35,7 @@ import { ArticleMetaComponent } from '../article-meta';
               </button>
             } @else {
               <button
-                data-test="toggle-follow-button"
+                data-test="toggle-follow-author-button"
                 class="btn btn-sm"
                 type="button"
                 [class.btn-secondary]="article.author.following"
@@ -47,7 +47,7 @@ import { ArticleMetaComponent } from '../article-meta';
                 {{ article.author.username }}
               </button>
               <button
-                data-test="toggle-favorite-button"
+                data-test="toggle-favorite-article-button"
                 class="btn btn-sm"
                 type="button"
                 [class.btn-success]="article.favorited"

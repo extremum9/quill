@@ -49,7 +49,9 @@ describe('UserInfoComponent', () => {
     expect(bio).withContext('You should have a `p` element for the bio').not.toBeNull();
     expect(bio.nativeElement.textContent).toContain(mockProfile.bio);
 
-    const toggleFollowButton = debugElement.query(By.css('[data-test=toggle-follow-button]'));
+    const toggleFollowButton = debugElement.query(
+      By.css('[data-test=toggle-follow-author-button]')
+    );
     expect(toggleFollowButton)
       .withContext('You should have a button to toggle the following of a user')
       .not.toBeNull();
@@ -72,7 +74,7 @@ describe('UserInfoComponent', () => {
     fixture.componentInstance.canModify = true;
     fixture.detectChanges();
 
-    expect(debugElement.query(By.css('toggle-follow-button')))
+    expect(debugElement.query(By.css('toggle-follow-author-button')))
       .withContext('You should NOT have a button to toggle the following of a user')
       .toBeNull();
 
@@ -94,7 +96,7 @@ describe('UserInfoComponent', () => {
     spyOn(component.toggledFollow, 'emit');
 
     fixture.debugElement
-      .query(By.css('[data-test=toggle-follow-button]'))
+      .query(By.css('[data-test=toggle-follow-author-button]'))
       .triggerEventHandler('click');
 
     expect(component.toggledFollow.emit).toHaveBeenCalled();

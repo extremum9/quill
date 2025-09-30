@@ -28,7 +28,7 @@ import { Profile } from '../../data-access/models';
               >
             } @else {
               <button
-                data-test="toggle-follow-button"
+                data-test="toggle-follow-author-button"
                 class="btn btn-sm"
                 type="button"
                 [class.btn-secondary]="profile.following"

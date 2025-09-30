@@ -12,7 +12,7 @@ import { ArticleMetaComponent } from '../article-meta';
     <div class="p-3 border rounded-1 bg-white">
       <ql-article-meta class="d-block mb-2" [article]="article">
         <button
-          data-test="toggle-favorite-button"
+          data-test="toggle-favorite-article-button"
           type="button"
           class="btn btn-sm flex-shrink-0 ms-auto"
           [class.btn-success]="article.favorited"

@@ -48,10 +48,37 @@ describe('Home', () => {
 
   const startBackend = (): void => {
     cy.intercept('GET', 'api/user', { user: mockUser }).as('getCurrentUser');
+
     cy.intercept('GET', 'api/articles?limit=10', { articles: mockArticles, articlesCount: 20 }).as(
       'getGlobalFeed'
     );
+    cy.intercept('GET', 'api/articles?limit=10&offset=0', {
+      articles: mockArticles,
+      articlesCount: 20
+    }).as('getFirstPageOfGlobalFeed');
+    cy.intercept('GET', 'api/articles?limit=10&offset=10', {
+      articles: mockArticles,
+      articlesCount: 20
+    }).as('getSecondPageOfGlobalFeed');
+
+    cy.intercept('GET', 'api/articles/feed?limit=10', {
+      articles: mockArticles,
+      articlesCount: 20
+    }).as('getUserFeed');
+
+    cy.intercept('GET', `api/articles?limit=10&tag=${mockTags[0]}`, {
+      articles: mockArticles,
+      articlesCount: 20
+    }).as('getSelectedTagFeed');
+
     cy.intercept('GET', 'api/tags', { tags: mockTags }).as('getTags');
+
+    cy.intercept('DELETE', `api/articles/${mockArticles[0].slug}/favorite`, {
+      article: { ...mockArticles[0], favorited: false }
+    }).as('unfavoriteArticle');
+    cy.intercept('POST', `api/articles/${mockArticles[1].slug}/favorite`, {
+      article: { ...mockArticles[1], favorited: true }
+    }).as('favoriteArticle');
   };
 
   const storeJwtTokenInLocalStorage = (): void => {
@@ -64,6 +91,12 @@ describe('Home', () => {
 
   const getNavbarBrand = () => cy.get('[data-test=navbar-brand]');
   const getNavbarLink = () => cy.get('[data-test=navbar-link]');
+  const getFeedTabLinks = () => cy.get('[data-test=feed-tab-link]');
+  const getGlobalFeedTab = () => getFeedTabLinks().first();
+  const getToggleFavoriteArticleButton = () => cy.get('[data-test=toggle-favorite-article-button]');
+  const getArticlePreviewLink = () => cy.get('[data-test=article-preview-link]');
+  const getPaginationItems = () => cy.get('.pagination .page-item');
+  const getTagLink = () => cy.get('[data-test=tag-link]');
 
   it('should display a navbar', () => {
     cy.visit('/');
@@ -124,13 +157,6 @@ describe('Home', () => {
       .and('have.attr', 'href', `/profile/${mockUser.username}`);
   });
 
-  const getFeedTabLinks = () => cy.get('[data-test=feed-tab-link]');
-  const getGlobalFeedTab = () => getFeedTabLinks().first();
-  const getToggleFavoriteButton = () => cy.get('[data-test=toggle-favorite-button]');
-  const getArticlePreviewLink = () => cy.get('[data-test=article-preview-link]');
-  const getPaginationItems = () => cy.get('.pagination .page-item');
-  const getTagLink = () => cy.get('[data-test=tag-link]');
-
   it('should display an empty message if no articles found', () => {
     cy.intercept('GET', 'api/articles?limit=10', {
       articles: [],
@@ -152,15 +178,6 @@ describe('Home', () => {
   });
 
   it('should display a global feed by default', () => {
-    cy.intercept('GET', 'api/articles?limit=10&offset=0', {
-      articles: mockArticles,
-      articlesCount: 20
-    }).as('getFirstPageOfGlobalFeed');
-    cy.intercept('GET', 'api/articles?limit=10&offset=10', {
-      articles: mockArticles,
-      articlesCount: 20
-    }).as('getSecondPageOfGlobalFeed');
-
     cy.visit('/');
     cy.wait('@getGlobalFeed');
 
@@ -187,9 +204,9 @@ describe('Home', () => {
     getArticleCreationDate().should('have.length', 2);
     getArticleCreationDate().first().should('contain', 'Published on Oct 8, 2024');
 
-    getToggleFavoriteButton().should('have.length', 2);
-    getToggleFavoriteButton().first().should('have.class', 'btn-success');
-    getToggleFavoriteButton().eq(1).should('have.class', 'btn-outline-success');
+    getToggleFavoriteArticleButton().should('have.length', 2);
+    getToggleFavoriteArticleButton().first().should('have.class', 'btn-success');
+    getToggleFavoriteArticleButton().eq(1).should('have.class', 'btn-outline-success');
 
     getArticlePreviewLink().should('have.length', 2);
     getArticlePreviewLink()
@@ -213,11 +230,6 @@ describe('Home', () => {
   });
 
   it('should display a user feed in another tab if logged in', () => {
-    cy.intercept('GET', 'api/articles/feed?limit=10', {
-      articles: mockArticles,
-      articlesCount: 20
-    }).as('getUserFeed');
-
     storeJwtTokenInLocalStorage();
     cy.visit('/');
     cy.wait(['@getCurrentUser', '@getGlobalFeed']);
@@ -239,11 +251,6 @@ describe('Home', () => {
   });
 
   it('should display a feed in another tab based on a selected tag', () => {
-    cy.intercept('GET', `api/articles?limit=10&tag=${mockTags[0]}`, {
-      articles: mockArticles,
-      articlesCount: 20
-    }).as('getSelectedTagFeed');
-
     cy.visit('/');
     cy.wait(['@getGlobalFeed', '@getTags']);
 
@@ -265,7 +272,7 @@ describe('Home', () => {
     getArticlePreviewLink().should('have.length', 2);
   });
 
-  it('should redirect to the login page when a non-logged in user clicks an author name', () => {
+  it('should redirect to the login page when a non-logged-in-user clicks the author name', () => {
     cy.visit('/');
     cy.wait('@getGlobalFeed');
 
@@ -274,7 +281,7 @@ describe('Home', () => {
     cy.location('pathname').should('eq', '/login');
   });
 
-  it('should redirect to the login page when a non-logged in user clicks toggle favorite', () => {
+  it('should redirect to the login page when a non-logged-in-user clicks toggle favorite', () => {
     cy.intercept('POST', `api/articles/${mockArticles[1].slug}/favorite`, {
       statusCode: 401
     }).as('failedFavoriteArticle');
@@ -282,33 +289,27 @@ describe('Home', () => {
     cy.visit('/');
     cy.wait('@getGlobalFeed');
 
-    getToggleFavoriteButton().eq(1).click();
+    getToggleFavoriteArticleButton().eq(1).click();
     cy.wait('@failedFavoriteArticle');
 
     cy.location('pathname').should('eq', '/login');
   });
 
   it('should toggle favorite articles if the user is logged in', () => {
-    cy.intercept('DELETE', `api/articles/${mockArticles[0].slug}/favorite`, {
-      article: { ...mockArticles[0], favorited: false }
-    }).as('unfavoriteArticle');
-    cy.intercept('POST', `api/articles/${mockArticles[1].slug}/favorite`, {
-      article: { ...mockArticles[1], favorited: true }
-    }).as('favoriteArticle');
-
     storeJwtTokenInLocalStorage();
     cy.visit('/');
+
     cy.wait(['@getCurrentUser', '@getGlobalFeed']);
 
-    getToggleFavoriteButton().first().click();
+    getToggleFavoriteArticleButton().first().click();
     cy.wait('@unfavoriteArticle');
 
-    getToggleFavoriteButton().should('have.class', 'btn-outline-success');
+    getToggleFavoriteArticleButton().should('have.class', 'btn-outline-success');
 
-    getToggleFavoriteButton().eq(1).click();
+    getToggleFavoriteArticleButton().eq(1).click();
     cy.wait('@favoriteArticle');
 
-    getToggleFavoriteButton().should('have.class', 'btn-success');
+    getToggleFavoriteArticleButton().should('have.class', 'btn-success');
   });
 
   it('should display an empty message if no tags found', () => {

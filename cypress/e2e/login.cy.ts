@@ -15,6 +15,7 @@ describe('Login', () => {
 
   it('should display a login page', () => {
     cy.intercept('POST', 'api/users/login', { user: mockUser }).as('loginUser');
+
     cy.visit('/login');
 
     cy.contains('h1', 'Sign in');
@@ -62,6 +63,7 @@ describe('Login', () => {
         }
       }
     }).as('failedLoginUser');
+
     cy.visit('/login');
 
     getEmailInput().type('jack@gmail.com');
