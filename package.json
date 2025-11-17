@@ -10,7 +10,6 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "format": "prettier --write \"{src,cypress}/**/*.+(ts|js|json|html)\"",
-    "postinstall": "yarn format",
     "prepare": "husky"
   },
   "lint-staged": {
