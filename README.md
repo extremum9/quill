@@ -28,3 +28,37 @@ Run the end-to-end tests using [Cypress](https://www.cypress.io/#create):
 ```bash
 ng e2e
 ```
+
+## Screenshots
+
+### Home page
+
+<img style="margin-bottom: 20px; border-radius: 10px;" src="public/screenshots/home-page.png" width="600" alt="Home page" />
+
+### Article page
+
+<img style="margin-bottom: 20px; border-radius: 10px;" src="public/screenshots/article-page.png" width="600" alt="Article page" />
+
+### New article page
+
+<img style="margin-bottom: 20px; border-radius: 10px;" src="public/screenshots/new-article-page.png" width="600" alt="New article page" />
+
+### Edit article page
+
+<img style="margin-bottom: 20px; border-radius: 10px;" src="public/screenshots/edit-article-page.png" width="600" alt="Edit article page" />
+
+### Author page
+
+<img style="margin-bottom: 20px; border-radius: 10px;" src="public/screenshots/author-page.png" width="600" alt="Author page" />
+
+### Settings page
+
+<img style="margin-bottom: 20px; border-radius: 10px;" src="public/screenshots/settings-page.png" width="600" alt="Settings page" />
+
+### Login page
+
+<img style="margin-bottom: 20px; border-radius: 10px;" src="public/screenshots/login-page.png" width="600" alt="Login page" />
+
+### Signup page
+
+<img style="margin-bottom: 20px; border-radius: 10px;" src="public/screenshots/signup-page.png" width="600" alt="Signup page" />
