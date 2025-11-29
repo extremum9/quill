@@ -2,11 +2,13 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
+import { By } from '@angular/platform-browser';
+
+import { ImgFallbackDirective } from '@/app/shared/directives/img-fallback/img-fallback.directive';
 
 import { Article } from '../../data-access/models';
 
 import { ArticleMetaComponent } from './article-meta.component';
-import { By } from '@angular/platform-browser';
 
 // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
 @Component({
@@ -48,6 +50,9 @@ describe('ArticleMetaComponent', () => {
     expect(avatar)
       .withContext('You should have an image for the author avatar wrapped around an `a` element')
       .not.toBeNull();
+    expect(avatar.injector.get(ImgFallbackDirective))
+      .withContext('The image should use the `qlImgFallback` directive')
+      .toBeTruthy();
 
     const avatarElement = avatar.nativeElement;
     expect(avatarElement.getAttribute('src'))
