@@ -1,8 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { By } from '@angular/platform-browser';
+
+import { ImgFallbackDirective } from '@/app/shared/directives/img-fallback/img-fallback.directive';
 
 import { UserInfoComponent } from './user-info.component';
-import { By } from '@angular/platform-browser';
 
 describe('UserInfoComponent', () => {
   const mockProfile = {
@@ -26,6 +28,9 @@ describe('UserInfoComponent', () => {
 
     const image = debugElement.query(By.css('[data-test=user-profile-image]'));
     expect(image).withContext('You should have an image for the user avatar').not.toBeNull();
+    expect(image.injector.get(ImgFallbackDirective))
+      .withContext('The image should use the `qlImgFallback` directive')
+      .toBeTruthy();
 
     const imageElement = image.nativeElement;
     expect(imageElement.getAttribute('src'))
@@ -33,10 +38,10 @@ describe('UserInfoComponent', () => {
       .toBe(mockProfile.image);
     expect(imageElement.getAttribute('width'))
       .withContext('The `width` attribute of the image is not correct')
-      .toBe('120');
+      .toBe('80');
     expect(imageElement.getAttribute('height'))
       .withContext('The `height` attribute of the image is not correct')
-      .toBe('120');
+      .toBe('80');
     expect(imageElement.getAttribute('alt'))
       .withContext('The `alt` attribute of the image is not correct')
       .toBe(mockProfile.username);

@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
 
+import { ImgFallbackDirective } from '@/app/shared/directives/img-fallback/img-fallback.directive';
+
 import { Article } from '../../data-access/models';
 
 @Component({
@@ -15,6 +17,7 @@ import { Article } from '../../data-access/models';
           width="32"
           height="32"
           [alt]="article.author.username"
+          qlImgFallback
         />
       </a>
       <div>
@@ -38,7 +41,7 @@ import { Article } from '../../data-access/models';
     </div>
   `,
   standalone: true,
-  imports: [RouterLink, DatePipe],
+  imports: [RouterLink, DatePipe, ImgFallbackDirective],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ArticleMetaComponent {

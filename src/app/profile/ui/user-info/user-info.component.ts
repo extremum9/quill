@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+import { ImgFallbackDirective } from '@/app/shared/directives/img-fallback/img-fallback.directive';
+
 import { Profile } from '../../data-access/models';
 
 @Component({
@@ -11,10 +13,12 @@ import { Profile } from '../../data-access/models';
         <div class="col-md-10 offset-md-1 text-center">
           <img
             data-test="user-profile-image"
+            class="mb-2 rounded-pill"
             [src]="profile.image"
-            width="120"
-            height="120"
+            width="80"
+            height="80"
             [alt]="profile.username"
+            qlImgFallback
           />
           <h1 data-test="user-profile-name">{{ profile.username }}</h1>
           <p data-test="user-profile-bio" class="text-body-tertiary">{{ profile.bio }}</p>
@@ -45,7 +49,7 @@ import { Profile } from '../../data-access/models';
     </div>
   `,
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, ImgFallbackDirective],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserInfoComponent {
